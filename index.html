@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منشئ السيرة الذاتية</title>
+  <meta name="description" content="أنشئ سيرتك الذاتية مجانًا خلال دقيقة واحدة بصيغة PDF وقوالب احترافية مع إمكانية التواصل السريع عبر واتساب ومشاركة الموقع على منصات التواصل الاجتماعي">
+  <meta name="keywords" content="سيرة ذاتية, منشئ CV, PDF, إنشاء سيرة, توظيف, وظائف, واتساب, إنستجرام, فيسبوك">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+    body { margin: 0; padding: 0; background: #f9f9f9; color: #333; }
+    header { background-color: #4CAF50; color: white; padding: 1rem; text-align: center; }
+    .container { padding: 2rem; max-width: 1000px; margin: auto; }
+    .btn { background-color: #4CAF50; color: white; padding: 0.8rem 1.2rem; border-radius: 5px; text-decoration: none; display: inline-block; margin-top: 1rem; cursor: pointer; }
+    .cv-form, .cv-output { background: white; padding: 1rem; border-radius: 10px; margin-top: 2rem; }
+    .cv-output img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #4CAF50; display: block; margin: auto; }
+    input, textarea { width: 100%; padding: 0.5rem; margin-top: 0.5rem; border-radius: 5px; border: 1px solid #ccc; }
+    label { font-weight: bold; margin-top: 1rem; display: block; }
+    .cv-section-title { font-weight: bold; color: #4CAF50; margin-top: 1rem; border-bottom: 1px solid #4CAF50; padding-bottom: 4px; }
+    .template-box { border: 1px solid #ccc; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; background: #fff; }
+    .template-box img { width: 100%; max-width: 400px; border-radius: 5px; }
+    .share-section { text-align: center; margin-top: 2rem; }
+    .share-section img { margin: 0 8px; vertical-align: middle; }
+    .whatsapp-contact { position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; padding: 0.6rem 1rem; border-radius: 30px; text-decoration: none; font-weight: bold; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+    footer { text-align: center; padding: 2rem; background: #eee; margin-top: 3rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>منشئ السيرة الذاتية</h1>
+    <p>أنشئ سيرتك الذاتية مجانًا خلال دقيقة واحدة</p>
+  </header>
+
+  <div class="container">
+    <div class="cv-form">
+      <h2>املأ بياناتك</h2>
+      <label>الصورة الشخصية:</label>
+      <input type="file" id="photo" accept="image/*">
+      <label>الاسم الكامل:</label>
+      <input type="text" id="name">
+      <label>المسمى الوظيفي:</label>
+      <input type="text" id="job">
+      <label>النبذة:</label>
+      <textarea id="summary"></textarea>
+      <label>المهارات (افصلها بفاصلة):</label>
+      <textarea id="skills"></textarea>
+      <label>الخبرات:</label>
+      <textarea id="experience"></textarea>
+      <label>الدراسة:</label>
+      <textarea id="education"></textarea>
+      <label>الاتصال (إيميل أو رقم):</label>
+      <input type="text" id="contact">
+      <button class="btn" onclick="generateCV()">عرض السيرة الذاتية</button>
+      <button class="btn" onclick="downloadPDF()">تحميل PDF</button>
+    </div>
+
+    <div class="cv-output" id="cv"></div>
+
+    <div class="template-box">
+      <h3>قوالب احترافية</h3>
+      <img src="template1.jpg" alt="قالب 1">
+      <p>تصميم عصري أنيق.</p>
+      <a class="btn" href="https://wa.me/201004233329" target="_blank">اطلب عبر واتساب</a>
+    </div>
+
+    <div class="share-section">
+      <h3>شارك الموقع مع أصدقائك 👇</h3>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://yourdomain.com" target="_blank">
+        <img src="https://img.icons8.com/color/48/facebook-new.png" alt="فيسبوك"/>
+      </a>
+      <a href="https://wa.me/?text=أنشئ سيرتك الذاتية مجانًا من هنا: https://yourdomain.com" target="_blank">
+        <img src="https://img.icons8.com/color/48/whatsapp.png" alt="واتساب"/>
+      </a>
+      <a href="https://www.instagram.com/" target="_blank">
+        <img src="https://img.icons8.com/color/48/instagram-new.png" alt="انستجرام"/>
+      </a>
+    </div>
+  </div>
+
+  <a class="whatsapp-contact" href="https://wa.me/201004233329" target="_blank">تواصل معنا واتساب: 01004233329</a>
+
+  <footer>
+    <p>&copy; 2025 منشئ السيرة الذاتية - جميع الحقوق محفوظة.</p>
+  </footer>
+
+  <script>
+    let photoData = "";
+    document.getElementById('photo').addEventListener('change', function () {
+      const reader = new FileReader();
+      reader.onload = () => { photoData = reader.result; };
+      reader.readAsDataURL(this.files[0]);
+    });
+
+    function generateCV() {
+      const name = document.getElementById('name').value;
+      const job = document.getElementById('job').value;
+      const summary = document.getElementById('summary').value;
+      const skills = document.getElementById('skills').value.split(',').map(s => `<li>${s.trim()}</li>`).join('');
+      const experience = document.getElementById('experience').value.split('\n').map(e => `<li>${e.trim()}</li>`).join('');
+      const education = document.getElementById('education').value.split('\n').map(e => `<li>${e.trim()}</li>`).join('');
+      const contact = document.getElementById('contact').value;
+
+      const html = `
+        ${photoData ? `<img src="${photoData}" alt="الصورة">` : ''}
+        <h2>${name}</h2>
+        <p><strong>${job}</strong></p>
+        <p class="cv-section-title">نبذة</p>
+        <p>${summary}</p>
+        <p class="cv-section-title">المهارات</p>
+        <ul>${skills}</ul>
+        <p class="cv-section-title">الخبرات</p>
+        <ul>${experience}</ul>
+        <p class="cv-section-title">الدراسة</p>
+        <ul>${education}</ul>
+        <p class="cv-section-title">معلومات الاتصال</p>
+        <p>${contact}</p>
+      `;
+      document.getElementById('cv').innerHTML = html;
+    }
+
+    function downloadPDF() {
+      const cv = document.getElementById('cv');
+      if (!cv.innerHTML.trim()) return alert('يجب إنشاء السيرة أولًا');
+      html2pdf().from(cv).set({ margin: 0.5, filename: 'cv.pdf' }).save();
+    }
+  </script>
+</body>
+</html>
